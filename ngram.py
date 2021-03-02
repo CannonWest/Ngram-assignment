@@ -1,3 +1,22 @@
+"""Cannon West, 3/1/21
+Welcome to Cannon West's Ngram model. The goal of this program is to generate sentences word by word using
+only the previous words for context,\nreferencing a provided text such as the works of William Shakespeare
+or Sir Arthur Conan Doyle. The parameters include the n value,\nwhich represents how much context we should
+be referencing on our text, the number or sentences to be generated m, and the text files to reference.\n(
+for example, ngram.py 3 10 sherlock.txt shakespeare.txt  <-- this will generate 10 sentences from the
+combined texts with n=3
+
+Example: given the parameters n=3 and text=sherlock.txt, the program generated the following sentences:
+"she knows that the king is capable of heroic self sacrifice and that anything dishonourable would be repugnant to her."
+"let us follow it out to the southern suburb , but sat with his chin upon his hands and stared into the crackling fire."
+
+The way my program works is by taking in files as plain text (combining if necessary), generating ngrams,
+then using the frequency of each (n-1)gram against a randomly generated\nnumber between 0 and freq to
+determine what the new word should be. The program will then continue generating words until an <end> tag
+is reached.
+
+PLEASE NOTE: The program only works with txt files in the UTF-8 format"""
+
 import sys
 import re
 import random
@@ -130,8 +149,8 @@ if __name__ == '__main__':
           "only the previous words for context,\nreferencing a provided text such as the works of William Shakespeare "
           "or Sir Arthur Conan Doyle. The parameters include the n value,\nwhich represents how much context we should "
           "be referencing on our text, the number or sentences to be generated m, and the text files to reference.\n("
-          "for example, ngram.py 3 10 sherlock.txt shakespeare.txt  <-- this will generate 10 sentences per text with "
-          "n=3")
+          "for example, ngram.py 3 10 sherlock.txt shakespeare.txt  <-- this will generate 10 sentences from the "
+          "combined texts with n=3")
     print()
 
     print("Example: given the parameters n=3 and text=sherlock.txt, the program generated the following sentences:")
@@ -141,9 +160,10 @@ if __name__ == '__main__':
           "crackling fire .")
     print()
 
-    print("The way my program works is by taking in files as plain text, generating ngrams, then using the frequency "
-          "of each (n-1)gram against a randomly generated\nnumber between 0 and freq to determine what the new word "
-          "should be. The program will then continue generating words until an <end> tag is reached.")
+    print("The way my program works is by taking in files as plain text (combining if necessary), generating ngrams, "
+          "then using the frequency of each (n-1)gram against a randomly generated\nnumber between 0 and freq to "
+          "determine what the new word should be. The program will then continue generating words until an <end> tag "
+          "is reached.")
     print()
 
     print("PLEASE NOTE: The program only works with txt files in the UTF-8 format")
@@ -157,18 +177,16 @@ if __name__ == '__main__':
         txts.append(sys.argv[i])
 
     # creating data from files
-    data = []
+    text = ""
     for t in txts:
         with open(t, 'r', encoding='utf8') as file:
-            data.append(file.read().replace('\n', ' '))
+            text += file.read().replace('\n', ' ')
 
-    for i in range(len(sys.argv) - 3):
-        print("Text: ", txts[i])
-        tokens = tokenize(data[i])
-        ngrams = generate_ngrams(tokens, n)
-        ng = Model(n)
-        ng.populate(ngrams)
-        ng.generate_sentences(m)
-        print()
+    tokens = tokenize(text)
+    ngrams = generate_ngrams(tokens, n)
+    ng = Model(n)
+    ng.populate(ngrams)
+    ng.generate_sentences(m)
+    print()
 
     print("all done!")
